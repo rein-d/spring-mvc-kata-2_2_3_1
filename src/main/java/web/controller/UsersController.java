@@ -44,22 +44,15 @@ public class UsersController {
     }
 
     @PostMapping("/users/{id}")
-    public String updateStudent(@PathVariable Long id,
-                                @ModelAttribute("student") User user,
+    public String updateUser(@PathVariable Long id,
+                                @ModelAttribute("user") User user,
                                 Model model) {
-
-        User existingUser = usersService.getUser(id);
-        existingUser.setId(id);
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
-
-        usersService.saveUser(existingUser);
+        usersService.saveUser(id, user.getFirstName(), user.getLastName(), user.getEmail());
         return "redirect:/users";
     }
 
     @GetMapping("/users/{id}")
-    public String deleteStudent(@PathVariable Long id) {
+    public String deleteUser(@PathVariable Long id) {
         usersService.deleteUser(id);
         return "redirect:/users";
     }

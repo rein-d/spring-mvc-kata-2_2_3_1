@@ -5,12 +5,10 @@ import web.model.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
+import javax.persistence.Query;
 import java.util.List;
 
 @Repository
-@Transactional
 public class UsersDaoImpl implements UsersDao {
 
     @PersistenceContext
@@ -23,10 +21,8 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public User getUser(long id) {
-        TypedQuery<User> q = entityManager.createQuery("SELECT U FROM User U WHERE U.id = :id", User.class);
-        q.setParameter("id", id);
-        return q.getSingleResult();
+    public User getUser(Long id) {
+        return entityManager.find(User.class, id);
     }
 
     @Override
@@ -40,7 +36,9 @@ public class UsersDaoImpl implements UsersDao {
     }
 
     @Override
-    public void deleteUser(long id) {
-        entityManager.remove(this.getUser(id));
+    public void deleteUser(Long id) {
+        Query q = entityManager.createQuery("DELETE FROM User U WHERE U.id = :id");
+        q.setParameter("id", id);
+        q.executeUpdate();
     }
 }

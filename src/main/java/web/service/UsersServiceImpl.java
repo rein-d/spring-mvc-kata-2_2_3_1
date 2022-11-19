@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import web.dao.UsersDao;
 import web.model.User;
 
+import javax.transaction.Transactional;
 import java.util.List;
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -19,22 +20,30 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public User getUser(long id) {
+    public User getUser(Long id) {
         return usersDao.getUser(id);
     }
 
+    @Transactional
     @Override
     public void addUser(User user) {
         usersDao.addUser(user);
     }
 
+    @Transactional
     @Override
-    public void saveUser(User user) {
-        usersDao.updateUser(user);
+    public void saveUser(Long id, String firstName, String lastName, String email) {
+        User existingUser = this.getUser(id);
+        existingUser.setId(id);
+        existingUser.setFirstName(firstName);
+        existingUser.setLastName(lastName);
+        existingUser.setEmail(email);
+        usersDao.updateUser(existingUser);
     }
 
+    @Transactional
     @Override
-    public void deleteUser(long id) {
+    public void deleteUser(Long id) {
         usersDao.deleteUser(id);
     }
 }
